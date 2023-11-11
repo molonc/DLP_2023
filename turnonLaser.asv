@@ -1,0 +1,8 @@
+function [app] = turnonLaser(app)
+    switch laser 
+        case 1
+            enableBlue(app)
+            powerBlue(app, app.BLUEEditField.Value)
+        case 2
+
+        case 3
