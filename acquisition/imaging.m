@@ -1,4 +1,4 @@
-%this function images splits the images and saves them 
+%this function images then splits them and then saves them 
 function imaging(app, row, col)
 
     inputImage = snapshot(app.vidobj); % this is how you take a image using a GigE cam which point grey is ??? 
@@ -8,7 +8,7 @@ function imaging(app, row, col)
 
     % Ensure the image can be evenly split into a 3x2 grid
     if mod(rows, 3) ~= 0 || mod(cols, 2) ~= 0
-        error('Image size is not suitable for splitting into a 3x2 grid.');
+        error('Image size is not suitable for splitting into a 3x2 grid.');%not sure what we will do if we cant :)
     end
 
     % Calculate the size of each portion

@@ -18,13 +18,6 @@ for i = 1:rows
             %wait 
 
             %turn the correct laser on 
-            if app.checkBlue == 1
-                turnonLaser(440)
-            elseif app.checkGreen == 1
-                turnonLaser(550)
-            elseif app.checkCyan == 1
-                turnonLaser(470)
-            end
 
             %imaging 
             imaging(app,i,j); 
@@ -37,13 +30,7 @@ for i = 1:rows
             %wait 
 
             %turn the correct laser on 
-            if app.checkBlue == 1
-                turnonLaser(440)
-            elseif app.checkGreen == 1
-                turnonLaser(550)
-            elseif app.checkCyan == 1
-                turnonLaser(470)
-            end
+
             %imaging 
             imaging(app,i,j); 
         end
