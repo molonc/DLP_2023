@@ -1,9 +1,14 @@
-function [app] = disconnectFromeScope(app)
-try
-    delete(app.ti);
-    app.MicroscopecoonectionLabel.FontColor = 'r';
-    app.MicroscopecoonectionLabel.Text = "Not Connected";
-catch
-    warndlg('Scope was not connected.');
-end
+function disconnectFromeScope(app)
+    try
+        % Disconnect from the microscope
+        app.ti.Disconnect();
+        
+        % Release the COM object
+        release(app.ti);
+        
+        app.MicroscopeConnectionLabel.FontColor = 'r';
+        app.MicroscopeConnectionLabel.Text = "Not Connected";
+    catch
+        warndlg('Error disconnecting from the microscope.');
+    end
 end
