@@ -1,5 +1,8 @@
 % moveScopeZ.m
 function moveScopeZ (app, distance)
-    nikonconversion = (distance/2.5)*100; 
-    app.ti.ZDrive.MoveRelative(nikonconversion);
+    % Convert distance from micrometers to microscope units
+    nikonConversion = distance / 2.5;
+
+    % Move the Z-axis relative to the current position
+    app.ti.ZDrive.MoveRelative(nikonConversion);
 end
