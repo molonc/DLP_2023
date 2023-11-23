@@ -6,7 +6,7 @@ cols = 36;
 
 % d is te progress bar that will pop up during acquisition
 d = uiprogressdlg(fig,'Single Cell Acquisition Progress','Please Wait',...
-        'Message','Starting Acquisition);
+        'Message','Starting Acquisition');
 pause(.5)
 
 
