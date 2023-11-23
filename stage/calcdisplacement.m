@@ -5,6 +5,10 @@ function calcdisplacement(app, i, j) % i is rows and j is collumns
     %i and j should start from 0 if the topleft is in the 0,0 postion of
     %the 24x36 matrix 
 
+    %this is to zero the postions 
+    i = i-1;
+    j= j-1; 
+
 
 
     % step size to get to next tile along x 
