@@ -69,7 +69,7 @@ for i = 1:rows
             turnoffLaser(app, 550)
         end
     end
-    d.value = i/24;
+    d.Value = i/24;
 end
 d.Value = 1; 
 d.Message = "Acquisition Completed"; 
