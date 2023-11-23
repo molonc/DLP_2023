@@ -18,6 +18,15 @@ for i = 1:rows
     d.Message = "Acquiring Data Current Row: " + i;
     if mod(i, 2) ~= 0
         for j = 1:cols
+           if app.PauseAcquisition
+                % Update the progress dialog message
+                d.Message = "Acquisition Paused at Row: " + i;
+                 
+                while app.PauseAcquisition
+                    pause(3); % Adjust the pause duration as needed
+                end
+                d.Message = "Acquisition Resuming at Row: " + i; 
+            end
             if app.checkBlue == 1 %if it's checked, the blue laser is turned on
                 turnonLaser(app, 440) %enables laser and sets its power
             end
