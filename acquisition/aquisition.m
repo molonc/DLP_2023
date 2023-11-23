@@ -4,6 +4,10 @@ function aquisition (app)
 rows = 24;
 cols = 36;
 
+% d is te progress bar that will pop up during acquisition
+d = uiprogressdlg(fig,'Single Cell Acquisition Progress','Please Wait',...
+        'Message','Starting Acquisition);
+pause(.5)
 
 
 %this is just the loop format for moving along the matrix in a snaking
@@ -11,6 +15,7 @@ cols = 36;
 
 for i = 1:rows
     % For odd rows, move left to right
+    d.Message = "Acquiring Data Current Row: " + i;
     if mod(i, 2) ~= 0
         for j = 1:cols
             if app.checkBlue == 1 %if it's checked, the blue laser is turned on
@@ -55,8 +60,12 @@ for i = 1:rows
             turnoffLaser(app, 550)
         end
     end
+    d.value = i/24;
 end
-
+d.Value = 1; 
+d.Message = "Acquisition Completed"; 
+pause(1);
+close(d)
 
 
 
