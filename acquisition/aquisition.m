@@ -32,8 +32,7 @@ for i = 1:rows
             end
             calcdisplacement(app, i, j);
             turnoffLaser(app, 440)
-            %pause(waitBeforeMoving(app)) need to figure out how long to
-            %wait 
+            
 
             %imaging 
             if app.checkCyan == 1
@@ -49,14 +48,21 @@ for i = 1:rows
     else
         % For even rows, move right to left
         for j = cols:-1:1
+            if app.PauseAcquisition
+                % Update the progress dialog message
+                d.Message = "Acquisition Paused at Row: " + i;
+                 
+                while app.PauseAcquisition
+                    pause(3); % Adjust the pause duration as needed
+                end
+                d.Message = "Acquisition Resuming at Row: " + i; 
+            end
             if app.checkBlue == 1 %if it's checked, the blue laser is turned on
                 turnonLaser(app, 440) %enables laser and sets its power
             end
             calcdisplacement(app, i, j);
             turnoffLaser(app, 440)
-            %pause(waitBeforeMoving(app)) need to figure out how long to
-            %wait 
-
+            
             %imaging 
             if app.checkCyan == 1
                 turnonLaser(app, 470)
