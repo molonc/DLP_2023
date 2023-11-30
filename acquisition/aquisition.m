@@ -7,7 +7,7 @@ cols = 36;
 % d is te progress bar that will pop up during acquisition
 d = uiprogressdlg(fig,'Single Cell Acquisition Progress','Please Wait',...
         'Message','Starting Acquisition');
-pause(.5)
+pause(2)
 
 
 %this is just the loop format for moving along the matrix in a snaking
@@ -37,13 +37,14 @@ for i = 1:rows
             %imaging 
             if app.checkCyan == 1
                 turnonLaser(app, 470)
+                imaging(app,i,j,470);
+                turnoffLaser(app, 470)
             end
             if app.checkGreen == 1 
                 turnonLaser(app, 550)
-            end
-            imaging(app,i,j);    
-            turnoffLaser(app, 470) %can comment out if only want to image with green
-            turnoffLaser(app, 550)
+                imaging(app,i,j,550); 
+                turnoffLaser(app, 550); 
+            end                  
         end
     else
         % For even rows, move right to left
@@ -66,20 +67,21 @@ for i = 1:rows
             %imaging 
             if app.checkCyan == 1
                 turnonLaser(app, 470)
+                imaging(app,i,j,470);
+                turnoffLaser(app, 470)
             end
             if app.checkGreen == 1 
                 turnonLaser(app, 550)
-            end
-            imaging(app,i,j);    
-            turnoffLaser(app, 470) %can comment out if only want to image with green
-            turnoffLaser(app, 550)
+                imaging(app,i,j,550); 
+                turnoffLaser(app, 550); 
+            end  
         end
     end
     d.Value = i/24;
 end
 d.Value = 1; 
 d.Message = "Acquisition Completed"; 
-pause(1);
+pause(2);
 close(d)
 
 

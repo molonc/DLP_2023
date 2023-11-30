@@ -1,9 +1,28 @@
 %this function images then splits them and then saves them 
-function imaging(app, row, col)
+function imaging(app, row, col, wavelength)
 
+    %this is for autofocus not sure if it is neccessary yet 
+
+    % app.vidobj.FocusMode = 'Auto'; % Set focus mode to autofocus
+    % executeCommand(app.vidobj, 'AutoFocus');
+
+
+    if app.checkBlue == 1 %if it's checked, the blue laser is turned on
+        blueFolder = fullfile(app.dname,'Blue');
+        mkdir(blueFolder);
+    end
+    if app.checkCyan == 1
+        cyanFolder = fullfile(app.dname, 'Cyan');
+        mkdir(cyanFolder);
+    end
+    if app.checkGreen == 1 
+        greenFolder = fullfile(app.dname,'Green');
+        mkdir(greenFolder);
+    end
     inputImage = snapshot(app.vidobj); % this is how you take a image using a GigE cam which point grey is ??? 
    
     % Get the size of the input image
+    % rows and cols are for the image not to be confused with the chip position
     [rows, cols] = size(inputImage);
 
     % Ensure the image can be evenly split into a 3x2 grid
@@ -39,11 +58,16 @@ function imaging(app, row, col)
         for j = 1:2
             % Build the file name based on row, column, i, and j
             fileName = sprintf('Image_Row%d_Col%d_Part%d_%d.tif', row, col, i, j); %probably need to add the laser that is being imaged as well 
-
             
-            % Get the full file path
-            fullFileName = fullfile(app.dname, fileName);
-            
+            if wavelength == 440
+                fullFileName = fullfile(blueFolder, fileName);
+            end
+            if wavelength == 470
+                fullFileName = fullfile(cyanFolder, fileName);
+            end
+            if wavelegnth == 550
+                fullFileName = fullfile(greenFolder, fileName);
+            end         
             % Save the split image
             imwrite(splitImage{i, j}, fullFileName);
         end
