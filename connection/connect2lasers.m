@@ -13,11 +13,8 @@ function [app] = connect2lasers(app)
     writeline(app.laser, initCmd1, 'uint8');
     writeline(app.laser, initCmd2, 'uint8');
 
-    app.laserconnectionLabel.FontColor = "#77AC30";
-    app.laserconnectionLabel.Text = "Connected";
-
 function connect_lasers_callback(src)
     data = fread(src, src.BytesAvailable);
-    %disp(['Received data: ' char(data)])
+    disp(['Received data: ' char(data)])
 
     
