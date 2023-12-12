@@ -26,12 +26,13 @@ for i = 1:rows
                     pause(3); % Adjust the pause duration as needed
                 end
                 d.Message = "Acquisition Resuming at Row: " + i; 
-            end
-            if app.checkBlue == 1 %if it's checked, the blue laser is turned on
+           end
+           openShutter(app)
+           if app.checkBlue == 1 %if it's checked, the blue laser is turned on
                 turnonLaser(app, 440) %enables laser and sets its power
-            end
-            calcdisplacement(app, i, j);
-            turnoffLaser(app, 440)
+           end
+           calcdisplacement(app, i, j);
+           turnoffLaser(app, 440)
             
 
             %imaging 
