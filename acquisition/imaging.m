@@ -65,7 +65,7 @@ function imaging(app, row, col, wavelength)
             if wavelength == 470
                 fullFileName = fullfile(cyanFolder, fileName);
             end
-            if wavelegnth == 550
+            if wavelength == 550
                 fullFileName = fullfile(greenFolder, fileName);
             end         
             % Save the split image
