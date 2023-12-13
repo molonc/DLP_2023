@@ -1,7 +1,7 @@
 function connect2scope(app)
     % Create a Nikon Ti object
     scope = actxserver('Nikon.TiScope.NikonTi');
-
+    pause(2);
     % Check if the microscope is connected
     if scope.IsConnected
         app.ti = scope; % Store the microscope object in the app

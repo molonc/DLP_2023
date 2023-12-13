@@ -4,10 +4,10 @@ function calcdisplacement(app, i, j) % i is rows and j is collumns
 
     %i and j should start from 0 if the topleft is in the 0,0 postion of
     %the 24x36 matrix 
-
+    
     %this is to zero the postions 
     i = i-1;
-    j= j-1; 
+    j= j-1;
 
 
 
@@ -31,8 +31,10 @@ function calcdisplacement(app, i, j) % i is rows and j is collumns
     app.imagingtile(1) = app.topleft(1) + i*xstep + j*xdispiny;
     app.imagingtile(2) = app.topleft(2) + j*ystep + i*ydispinx;
     app.imagingtile(3) = app.topleft(3) + i*zdispinx + j*zdispiny; 
+    
 
-     %this is for the scope
+
+    %this is for the scope
     zdispinx = (app.tr_scope - app.tl_scope)/23;
     zdispiny = (app.bl_scope - app.tl_scope)/35; 
     
@@ -41,9 +43,6 @@ function calcdisplacement(app, i, j) % i is rows and j is collumns
     %this is for if we want calc postion to move to the next tile as well 
     moveStage(app, app.imagingtile);
     moveScopeAbsZ(app,scope_postion); 
-
-    %this is for if we want calc postion to move to the next tile as well 
-    %moveStage(app, app.imagingtile);
 
 
    

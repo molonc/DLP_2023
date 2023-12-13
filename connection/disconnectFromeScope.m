@@ -5,7 +5,7 @@ function disconnectFromeScope(app)
         
         % Release the COM object
         release(app.ti);
-        
+        clear app.ti
         app.MicroscopeConnectionLabel.FontColor = 'r';
         app.MicroscopeConnectionLabel.Text = "Not Connected";
     catch

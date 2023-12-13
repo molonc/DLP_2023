@@ -4,4 +4,6 @@ function [] = setConfig(param, value)
     global global_config;
     Config.get_config();
     global_config.(param) = value;
+
 end
+

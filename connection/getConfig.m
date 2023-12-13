@@ -27,6 +27,8 @@ global_config.TRIGGER_PORT = 'COM5';
 % XY Stage
 global_config.STAGE_PORT = 'COM4';
 
+
+
 if isfield(global_config, param)
     value = global_config.(param);
 else

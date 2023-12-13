@@ -57,6 +57,8 @@ function imaging(app, row, col, wavelength)
     for i = 1:3
         for j = 1:2
             % Build the file name based on row, column, i, and j
+
+            %chip_ID = app.ChipIDEditField.Value;
             fileName = sprintf('Image_Row%d_Col%d_Part%d_%d.tif', row, col, i, j); %probably need to add the laser that is being imaged as well 
             
             if wavelength == 440
