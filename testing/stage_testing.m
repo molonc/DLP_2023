@@ -7,9 +7,9 @@ stage.Timeout = timeoutDuration;
 % Send a command and read the response
 try
     writeline(stage, 'WHERE X Y Z');  % Example MOVE command
-    response = readline(stage);
-    disp(response);
-    writeline(stage, 'MOVE X=0 Y=0')
+    response = readline(stage);  
+    disp(response); %returns -251877 412279 meaning -25.1877 mm and 41.22mm 
+    writeline(stage, 'MOVE X=-20 Y=20') % moves it t 0.0006mm and 0.0008
     response = readline(stage);
     disp(response); 
 catch exception

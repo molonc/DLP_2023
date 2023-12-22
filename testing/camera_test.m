@@ -1,5 +1,6 @@
 %info = imaqhwinfo
-vid = videoinput('winvideo', 1,'RGB32_1920x1200');
+vid = videoinput('winvideo', 1,'RGB32_1920x1144');
+%videoinput()
 % Set up video object properties (adjust as needed)
 vid.FramesPerTrigger = Inf;
 vid.ReturnedColorspace = 'rgb';
