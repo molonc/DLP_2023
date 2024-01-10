@@ -9,7 +9,7 @@ try
     writeline(stage, 'WHERE X Y Z');  % Example MOVE command
     response = readline(stage);  
     disp(response); %returns -251877 412279 meaning -25.1877 mm and 41.22mm 
-    writeline(stage, 'MOVE X=-20 Y=20') % moves it t 0.0006mm and 0.0008
+    writeline(stage, 'MOVE X=-20 Y=20') % moves it t 0.0006mm and 0.0008 (note -20 means athe mosition 2 microns away from origin so obviosly hasrd to be super accurate 
     response = readline(stage);
     disp(response); 
 catch exception

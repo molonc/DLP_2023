@@ -18,11 +18,12 @@ end
 % global_config.LASER_550_PORT = 'COM2'; 
 % global_config.LASER_575_PORT = 'COM4'; 
 % global_config.LASER_640_PORT = 'COM5'; 
-global_config.LASER_PORT = 'COM3';
+global_config.LASER_PORT = 'COM3'; % C
+%Scope is B
 
 
 % Triggering
-global_config.TRIGGER_PORT = 'COM5';
+%global_config.TRIGGER_PORT = 'COM5';
 
 % XY Stage
 global_config.STAGE_PORT = 'COM4';

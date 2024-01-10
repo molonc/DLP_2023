@@ -1,13 +1,15 @@
 % connect2stage.m
 function connect2stage(app,comPort)
-    try
-        app.stage = serialport(comPort); 
-        set(app.stage, 'BaudRate', 9600, 'DataBits', 8, 'StopBits', 1, 'Parity', 'none');
-        fopen(app.stage);
-        app.stageconnectionLabel.FontColor = "#77AC30";
-        app.stageconnectionLabel.Text = "Connected";
-    catch
-        app.stageconnectionLabel.FontColor = 'r';
-        app.stageconnectionLabel.Text = "Connection Failed";
-    end
+    %try
+    app.stage = serialport(comPort, 115200);
+    configureTerminator(app.stage, "CR");  % Set Carriage Return as the terminator
+    timeoutDuration = 10;  % Set timeout duration in seconds
+    app.stage.Timeout = timeoutDuration;
+    app.stageconnectionLabel.FontColor = "#77AC30";
+    app.stageconnectionLabel.Text = "Connected";
+    % catch
+    %     disp(error);
+    %     app.stageconnectionLabel.FontColor = 'r';
+    %     app.stageconnectionLabel.Text = "Connection Failed";
+    % end
 end

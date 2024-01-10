@@ -17,6 +17,13 @@ writeline(laser_serial, initCmd2);
 
 %blueOnCmd = '4F 5F 50'
 %write
+tempCmd = sscanf('53 91 02 50', '%2X');
+fwrite(laser_serial, tempCmd, 'uint8');
+tempData = fread(laser_serial, 2, 'char');
+first11MSB = tempData(1) * 8 + bitsra(tempData(2), 5);
+temperature = first11MSB * 0.125;
+disp(['The temperature of the laser control box (oC): ', num2str(temperature)]);
+
 
 blueOnCmd = sscanf('4F 5F 50', '%2X'); % hex values for serial communication
 fwrite(laser_serial, blueOnCmd, 'uint8');

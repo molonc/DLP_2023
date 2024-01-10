@@ -1,7 +1,7 @@
 function disconnectFromeScope(app)
     try
         % Disconnect from the microscope
-        app.ti.Disconnect();
+        % app.ti.Disconnect();
         
         % Release the COM object
         release(app.ti);

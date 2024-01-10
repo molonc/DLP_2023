@@ -1,7 +1,7 @@
 function disconnectFromLaser(app)
-     try
+     try %this might be to much code isempty and isvalid is yet to be tested to see if it works with the com object 
         if ~isempty(app.laser) && isvalid(app.laser)
-            fclose(app.laser);
+            % fclose(app.laser);
             delete(app.laser);
             clear app.laser
             app.laserconnectionLabel.FontColor = 'r';
