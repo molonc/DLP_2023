@@ -1,18 +1,19 @@
 function testing_r2 
     %% laser Connection
-
-    laser_serial = serialport('COM3', 9600);
+    % I = imread('windows_xp_bliss-wide.jpg');
+    % splitAndSaveImage(I);
+    laser_serial = serialport('COM3', 9600); 
     fopen(laser_serial)
     laser_serial.DataBits = 8;
     laser_serial.Parity = 'none';
     laser_serial.StopBits = 1;
     laser_serial.FlowControl = 'none';
     configureTerminator(laser_serial, 13);
-    
+
     % Initialize commands
     initCmd1 = '57 02 FF 50';
     initCmd2 = '57 03 AB 50';
-    
+
     % Write commands to the serial port
     writeline(laser_serial, initCmd1);
     writeline(laser_serial, initCmd2);
@@ -268,7 +269,7 @@ end
 
 function splitImage = splitAndSaveImage(inputImage)
     % Get the size of the input image
-    [rows, cols] = size(inputImage);
+    [rows, cols, ~] = size(inputImage);
 
     % Ensure the image can be evenly split into a 3x2 grid
     if mod(rows, 3) ~= 0 || mod(cols, 2) ~= 0
@@ -286,13 +287,13 @@ function splitImage = splitAndSaveImage(inputImage)
     for i = 1:3
         for j = 1:2
             % Calculate the indices for each portion
-            startRow = (i - 1) * portionRows + 1;
-            endRow = i * portionRows;
-            startCol = (j - 1) * portionCols + 1;
-            endCol = j * portionCols;
+            startRow = round((i - 1) * portionRows) + 1;
+            endRow = round(i * portionRows);
+            startCol = round((j - 1) * portionCols) + 1;
+            endCol = round(j * portionCols);
 
             % Extract the portion from the input image
-            splitImage{i, j} = inputImage(startRow:endRow, startCol:endCol);
+            splitImage{i, j} = inputImage(startRow:endRow, startCol:endCol, :);
         end
     end
 
@@ -318,3 +319,4 @@ function saveSplitImages(splitImage, rows, cols)
         end
     end
 end
+
