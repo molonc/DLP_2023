@@ -25,14 +25,15 @@ function testing_r2
     configureTerminator(stage, "CR");  % Set Carriage Return as the terminator
     timeoutDuration = 10;  % Set timeout duration in seconds
     stage.Timeout = timeoutDuration;
-
+    % 
     %% Camera Connection 
-    vid = videoinput('winvideo', 1,'RGB32_1920x1144');
+
+    vid = videoinput('winvideo', 1,'RGB32_1920x1200'); % Changed to 1200 from 1140 on Jan 15 
     % Set up video object properties (adjust as needed)
     vid.FramesPerTrigger = Inf;
     vid.ReturnedColorspace = 'rgb';
-
-    %% Microscope Connection 
+    
+    %% Microscope Connection --> Success it works exactly as written !!!!
 
     scope = actxserver('Nikon.TiScope.NikonTi');
 
@@ -40,21 +41,31 @@ function testing_r2
     %% Testing Begins!!
 
     turnlaserson(laser_serial);
-    movescopeBy(scope);
-    movescopeTo(scope);
-    liveviewwithSquares(vid);
-    takeandsaveimage(vid);
-    testImageSplitting(vid);
-    movestageBy(stage);
-    movestageTo(stage);
+    delete(laser_serial)
+    clear laser_serial
+    
+    movescopeBy(scope); %works
+    movescopeTo(scope); %works
+    % Release the ActiveX server
+    release(scope);
+    
+    liveviewwithSquares(vid); %doesn't work
+    takeandsaveimage(vid); % works
+    testImageSplitting(vid); % kinda works
+
+     
+     
+    movestageBy(stage); %works
+    movestageTo(stage); %works
 
     %Save some positions to a mat file
-    positionX = 0;
+    positionX = 0; % 100000 moves it to position 10mm not that this overly matters since i think it returns 100000
     positionY = 0;
-    save('stage_positions.mat', positionX, positionY);
+    save('stage_positions.mat', 'positionX', 'positionY');
 
-    movestagetoMat(stage); 
-    
+    movestagetoMat(stage); %works
+    delete(stage);
+    clear stage;
 
 end
 
@@ -68,7 +79,7 @@ function turnlaserson(laser_serial)
     powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
     fwrite(laser_serial, powerBlue, 'uint8');
 
-    pause(2);
+    pause(5);
 
     turnlaseroff(laser_serial);
 
@@ -80,7 +91,7 @@ function turnlaserson(laser_serial)
     powerCyanCmd = sscanf(['53 18 03 02 F', cyanPowerHex, '0 50'], '%2X');
     fwrite(laser_serial, powerCyanCmd, 'uint8');
     
-    pause(2);
+    pause(5);
 
     turnlaseroff(laser_serial);
     
@@ -92,7 +103,7 @@ function turnlaserson(laser_serial)
     powerGreenCmd = sscanf(['53 18 03 04 F', greenPowerHex, '0 50'], '%2X');
     fwrite(laser_serial, powerGreenCmd, 'uint8'); 
 
-    pause(2);
+    pause(5);
 
     turnlaseroff(laser_serial);    
 
@@ -129,7 +140,7 @@ function movescopeTo(scope)
     % Move ZDrive 50 micrometers up
     distanceToMove = (distanceToMove/2.5)*100;
 
-    scope.ZDrive.MoveRelative(distanceToMove);
+    scope.ZDrive.MoveAbsolute(distanceToMove);
 
     % Pause for a moment to allow the ZDrive to move
     pause(2);
@@ -142,55 +153,67 @@ function movescopeTo(scope)
 end
 
 function liveviewwithSquares(vidobj)
-    src = getselectedsource(vidobj);
-    src.ExposureTimeControl = 'normal';
-
     % Create a figure with UIAxes to display the live image
     hFigure = uifigure('Name', 'Live Image with Squares');
     hAxes = uiaxes('Parent', hFigure, 'Position', [10, 10, 400, 300], 'Tag', 'UIAxes1');
+
+    % Add a figure close request function
+    hFigure.CloseRequestFcn = @(src, event) closeFigure(src, vidobj);
+
+    % Draw the initial grid lines
+    drawGridLines(hAxes);
 
     % Continuous update loop
     while ishandle(hFigure)
         % Get the live image
         liveImage = getsnapshot(vidobj);
-        exptime = input('Enter the Exposure time (in milliseconds): ');
-        src.ExposureTime = (exptime) / 1000; % Convert from milliseconds to seconds
 
-        % Clear the axes before drawing new rectangles
-        cla(hAxes);
-
-        % Add squares to indicate cell alignment
-        [rows, cols, ~] = size(liveImage);
-        portionRows = rows / 3;
-        portionCols = cols / 2;
-
-        for i = 1:3
-            for j = 1:2
-                % Calculate square coordinates
-                startRowSquare = (i - 1) * portionRows + 1;
-                startColSquare = (j - 1) * portionCols + 1;
-
-                % Draw a square on the live image using rectangle
-                rectangle(hAxes, 'Position', [startColSquare, startRowSquare, portionCols, portionRows], 'EdgeColor', 'r', 'LineWidth', 2);
+        % Check if figure and axes are still valid
+        if ishandle(hFigure) && ishandle(hAxes)
+            % Update only the image behind the grid lines
+            if isempty(hAxes.Children)
+                % First time, create the image object
+                hImage = imshow(liveImage, 'Parent', hAxes);
+            else
+                % Update CData of the existing image object
+                hImage.CData = liveImage;
             end
+        else
+            break; % Exit the loop if figure or axes is closed
         end
-
-        % Display the live image with squares
-        imshow(liveImage, 'Parent', hAxes);
 
         % Optional: Pause to control the update rate
         pause(0.1); % Adjust as needed
     end
+end
 
-    % Close the live preview when the loop breaks
+function drawGridLines(hAxes)
+    % Add squares to indicate cell alignment
+    portionRows = 1200 / 3;  % Assuming image size is 1920x1200
+    portionCols = 1920 / 2;
+
+    for i = 1:3
+        for j = 1:2
+            % Calculate square coordinates
+            startRowSquare = (i - 1) * portionRows + 1;
+            startColSquare = (j - 1) * portionCols + 1;
+
+            % Draw a square on the live image using rectangle
+            rectangle(hAxes, 'Position', [startColSquare, startRowSquare, portionCols, portionRows], 'EdgeColor', 'r', 'LineWidth', 2);
+        end
+    end
+end
+
+function closeFigure(fig, vidobj)
+    % Close the live preview when the figure closes
     closepreview(vidobj);
+    delete(fig);
 end
 
 
-
-function takeandsaveimage(vid)
+function takeandsaveimage(vid) % works 
     % Capture an image
-    image = snapshot(vid);
+    image = getsnapshot(vid);
 
     % Prompt the user for a file name
     [filename, pathname] = uiputfile({'*.png'; '*.jpg'; '*.bmp'}, 'Save Image As', 'captured_image.png');
@@ -212,42 +235,93 @@ function takeandsaveimage(vid)
 end
 
 function movestageBy(stage)
+    writeline(stage, 'WHERE X Y Z');
+    
+    response = readline(stage);  
+    disp(response);
+
     distanceToMoveX = input('Enter the distance to move X (in micrometers): ');
     distanceToMoveY = input('Enter the distance to move Y (in micrometers): ');
-    command = sprintf('R X=%.2f', distanceToMoveX); % I think it needs to be done like this 
+    command = sprintf('R X=%.2f Y=%.2f Z', distanceToMoveX,distanceToMoveY); % I think it needs to be done like this 
     writeline(stage, command);
-    command = sprintf('R Y=%.2f', distanceToMoveY);
-    writeline(stage, command);
+    response = readline(stage); 
+    % command = sprintf('R Y=%.2f', distanceToMoveY);
+    % writeline(stage, command);
+    writeline(stage, '/');
+    response = readline(stage);  
+    while isequal(response,'N')
+        writeline(stage, '/');
+        response = readline(stage);
+    end
+
+    writeline(stage, 'WHERE X Y Z');
+
+    response = readline(stage);  
+    disp(response);
+    % we need to grab the response from the stage after each command no
+    % matter if it is irrelevant therefore the above code works :) 
 end
 
-function movestageTo(stage)
+function movestageTo(stage) %this works
     positionX = input('Enter the X position: ');
     positionY = input('Enter the Y position: ');
 
     command = sprintf('M X=%.2f Y=%.2f', positionX, positionY);
     writeline(stage, command);
-    
-    writeline(stage, 'WHERE X Y');
     response = readline(stage);
-    position = sscanf(response, 'A X=%f Y=%f');
-    disp(position);
+
+    writeline(stage, '/');
+    response = readline(stage);  
+    while isequal(response,'N')
+        writeline(stage, '/');
+        response = readline(stage);
+    end
+    
+    writeline(stage, 'W X Y Z');
+    response = readline(stage);
+    disp(response);
+
+    % Extract numerical values from the response using regular expressions
+    pattern = '(-?\d+)';  % Match one or more digits, optionally preceded by a minus sign
+    matches = regexp(response, pattern, 'tokens');
+
+    % Convert the matched strings to numeric values
+    currentPosition = cellfun(@str2double, matches);
+
+    % Display the extracted values
+    disp('Extracted Positions:');
+    disp(currentPosition);
 end
 
 function movestagetoMat(stage)
     loadedData = load('stage_positions.mat');
     command = sprintf('M X=%.2f Y=%.2f', loadedData.positionX, loadedData.positionY);
     writeline(stage, command);
+    response = readline(stage);
+
+    writeline(stage, '/');
+    response = readline(stage);  
+    while isequal(response,'N')
+        writeline(stage, '/');
+        response = readline(stage);
+    end
 
     writeline(stage, 'WHERE X Y');
     response = readline(stage);
-    position = sscanf(response, 'A X=%f Y=%f');
+    % Extract numerical values from the response using regular expressions
+    pattern = '(-?\d+)';  % Match one or more digits, optionally preceded by a minus sign
+    matches = regexp(response, pattern, 'tokens');
+
+    % Convert the matched strings to numeric values
+    currentPosition = cellfun(@str2double, matches);
+    position = currentPosition; 
     disp(['X = ' num2str(position(1)) ', Y = ' num2str(position(2))]);
 end
 
 function testImageSplitting(vidobj)
     % Capture an image using the provided video object
-    inputImage = snapshot(vidobj);
-    
+    inputImage = getsnapshot(vidobj);
+
     % Display the input image
     figure;
     subplot(2, 3, 1);
@@ -257,12 +331,18 @@ function testImageSplitting(vidobj)
     % Simulate the image splitting process
     splitImage = splitAndSaveImage(inputImage);
 
-    % Display the split images
-    for i = 1:3
-        for j = 1:2
-            subplot(2, 3, i * 2 + j);
-            imshow(splitImage{i, j}, 'InitialMagnification', 'fit');
-            title(['Split ' num2str(i) '-' num2str(j)]);
+    % Display the split images in a 2x3 matrix
+    for i = 1:2
+        for j = 1:3
+            % Calculate the current subplot index
+            subplotIndex = (i - 1) * 3 + j + 1;
+
+            % Check if the subplot index is within bounds
+            if subplotIndex <= numel(splitImage)
+                subplot(2, 3, subplotIndex);
+                imshow(splitImage{subplotIndex}, 'InitialMagnification', 'fit');
+                title(['Split ' num2str(i) '-' num2str(j)]);
+            end
         end
     end
 end
@@ -271,21 +351,21 @@ function splitImage = splitAndSaveImage(inputImage)
     % Get the size of the input image
     [rows, cols, ~] = size(inputImage);
 
-    % Ensure the image can be evenly split into a 3x2 grid
-    if mod(rows, 3) ~= 0 || mod(cols, 2) ~= 0
-        error('Image size is not suitable for splitting into a 3x2 grid.');
+    % Ensure the image can be evenly split into a 2x3 grid
+    if mod(rows, 2) ~= 0 || mod(cols, 3) ~= 0
+        error('Image size is not suitable for splitting into a 2x3 grid.');
     end
 
     % Calculate the size of each portion
-    portionRows = rows / 3;
-    portionCols = cols / 2;
+    portionRows = rows / 2;
+    portionCols = cols / 3;
 
     % Initialize the output cell array to store the portions
-    splitImage = cell(3, 2);
+    splitImage = cell(1, 6);
 
-    % Split the image into 3x2 portions
-    for i = 1:3
-        for j = 1:2
+    % Split the image into 2x3 portions
+    for i = 1:2
+        for j = 1:3
             % Calculate the indices for each portion
             startRow = round((i - 1) * portionRows) + 1;
             endRow = round(i * portionRows);
@@ -293,7 +373,7 @@ function splitImage = splitAndSaveImage(inputImage)
             endCol = round(j * portionCols);
 
             % Extract the portion from the input image
-            splitImage{i, j} = inputImage(startRow:endRow, startCol:endCol, :);
+            splitImage{(i - 1) * 3 + j} = inputImage(startRow:endRow, startCol:endCol, :);
         end
     end
 
@@ -311,12 +391,9 @@ function saveSplitImages(splitImage, rows, cols)
     end
 
     % Save the split images
-    for i = 1:3
-        for j = 1:2
-            fileName = sprintf('Image_Row%d_Col%d_Part%d_%d.tif', rows, cols, i, j);
-            fullFileName = fullfile(outputFolder, fileName);
-            imwrite(splitImage{i, j}, fullFileName);
-        end
+    for k = 1:numel(splitImage)
+        fileName = sprintf('Image_Row%d_Col%d_Part%d.tif', rows, cols, k);
+        fullFileName = fullfile(outputFolder, fileName);
+        imwrite(splitImage{k}, fullFileName);
     end
 end
-

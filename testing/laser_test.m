@@ -33,7 +33,7 @@ bluePowerHex = dec2hex(255-bluePowerDec, 2); %convert intensity to a hex value
 powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
 fwrite(laser_serial, powerBlue, 'uint8');
 
-pause(5);
+pause(30);
 
 bluePowerDec = 0; %get value for intensity
 bluePowerHex = dec2hex(255-bluePowerDec, 2); %convert intensity to a hex value
