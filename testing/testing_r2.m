@@ -1,7 +1,8 @@
 function testing_r2 
-    %% laser Connection
-    % I = imread('windows_xp_bliss-wide.jpg');
+    % I = imread('1.png');
     % splitAndSaveImage(I);
+    
+    %% laser Connection
     laser_serial = serialport('COM3', 9600); 
     fopen(laser_serial)
     laser_serial.DataBits = 8;
@@ -32,7 +33,7 @@ function testing_r2
     % Set up video object properties (adjust as needed)
     vid.FramesPerTrigger = Inf;
     vid.ReturnedColorspace = 'rgb';
-    
+
     %% Microscope Connection --> Success it works exactly as written !!!!
 
     scope = actxserver('Nikon.TiScope.NikonTi');
@@ -43,18 +44,18 @@ function testing_r2
     turnlaserson(laser_serial);
     delete(laser_serial)
     clear laser_serial
-    
+
     movescopeBy(scope); %works
     movescopeTo(scope); %works
     % Release the ActiveX server
     release(scope);
-    
+
     liveviewwithSquares(vid); %doesn't work
     takeandsaveimage(vid); % works
     testImageSplitting(vid); % kinda works
 
-     
-     
+
+
     movestageBy(stage); %works
     movestageTo(stage); %works
 
@@ -318,7 +319,7 @@ function movestagetoMat(stage)
     disp(['X = ' num2str(position(1)) ', Y = ' num2str(position(2))]);
 end
 
-function testImageSplitting(vidobj)
+function testImageSplitting(vidobj) %unsure if this works 
     % Capture an image using the provided video object
     inputImage = getsnapshot(vidobj);
 
@@ -340,14 +341,15 @@ function testImageSplitting(vidobj)
             % Check if the subplot index is within bounds
             if subplotIndex <= numel(splitImage)
                 subplot(2, 3, subplotIndex);
-                imshow(splitImage{subplotIndex}, 'InitialMagnification', 'fit');
+                imshow(splitImage{i, j}, 'InitialMagnification', 'fit');
                 title(['Split ' num2str(i) '-' num2str(j)]);
             end
         end
     end
 end
 
-function splitImage = splitAndSaveImage(inputImage)
+
+function splitImage = splitAndSaveImage(inputImage) % this works given an input image 
     % Get the size of the input image
     [rows, cols, ~] = size(inputImage);
 
@@ -381,7 +383,7 @@ function splitImage = splitAndSaveImage(inputImage)
     saveSplitImages(splitImage, rows, cols);
 end
 
-function saveSplitImages(splitImage, rows, cols)
+function saveSplitImages(splitImage, rows, cols) % this also works 
     % Set folder path (replace this with your actual folder path)
     outputFolder = 'SplitImages';
 
