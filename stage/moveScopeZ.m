@@ -6,5 +6,5 @@ function moveScopeZ (app, distance)
     % Move the Z-axis relative to the current position
     app.ti.ZDrive.MoveRelative(nikonConversion);
     % Wait for the device to complete the move
-    pause(1);
+    %pause(1);
 end

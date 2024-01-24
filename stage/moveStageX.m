@@ -1,8 +1,14 @@
 % moveStageX.m
 function moveStageX(app, distance)
-    command = sprintf('R X=%.2f', distance); % I think it needs to be done like this 
+    command = sprintf('R X=%.2f Y Z', distance); % I think it needs to be done like this 
     writeline(app.stage, command);
-    % Update the position and display it
-    %app.StagePosition(1) = app.StagePosition(1) + distance;
+    response = readline(stage); % sneds back :A when complete
+
+    writeline(stage, '/');
+    response = readline(stage);  
+    while isequal(response,'N')
+        writeline(stage, '/');
+        response = readline(stage);
+    end
     
 end

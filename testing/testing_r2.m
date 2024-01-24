@@ -1,4 +1,4 @@
-function testing_r2 
+function testing_r2                                                          
     % I = imread('1.png');
     % splitAndSaveImage(I);
     
@@ -28,9 +28,10 @@ function testing_r2
     stage.Timeout = timeoutDuration;
     % 
     %% Camera Connection 
-
+    
     vid = videoinput('winvideo', 1,'RGB32_1920x1200'); % Changed to 1200 from 1140 on Jan 15 
     % Set up video object properties (adjust as needed)
+    get(vid)
     vid.FramesPerTrigger = Inf;
     vid.ReturnedColorspace = 'rgb';
 
@@ -39,32 +40,32 @@ function testing_r2
     scope = actxserver('Nikon.TiScope.NikonTi');
 
 
-    %% Testing Begins!!
+    %% Testing Begins!! (use scope testing to check the status of the shutters)
 
     turnlaserson(laser_serial);
     delete(laser_serial)
     clear laser_serial
 
-    movescopeBy(scope); %works
-    movescopeTo(scope); %works
+    % movescopeBy(scope); %works
+    % movescopeTo(scope); %works
     % Release the ActiveX server
     release(scope);
 
-    liveviewwithSquares(vid); %doesn't work
-    takeandsaveimage(vid); % works
-    testImageSplitting(vid); % kinda works
+    % liveviewwithSquares(vid); %doesn't work
+    % takeandsaveimage(vid); % works
+    % testImageSplitting(vid); % kinda works
+    testExposureAdjustment(vid)
 
 
-
-    movestageBy(stage); %works
-    movestageTo(stage); %works
-
-    %Save some positions to a mat file
-    positionX = 0; % 100000 moves it to position 10mm not that this overly matters since i think it returns 100000
-    positionY = 0;
-    save('stage_positions.mat', 'positionX', 'positionY');
-
-    movestagetoMat(stage); %works
+    % movestageBy(stage); %works
+    % movestageTo(stage); %works
+    % 
+    % %Save some positions to a mat file
+    % positionX = 0; % 100000 moves it to position 10mm not that this overly matters since i think it returns 100000
+    % positionY = 0;
+    % save('stage_positions.mat', 'positionX', 'positionY');
+    % 
+    % movestagetoMat(stage); %works
     delete(stage);
     clear stage;
 
@@ -114,6 +115,39 @@ function turnlaseroff(laser_serial)
     allOffCmd = sscanf('4F 7F 50', '%2X');
     fwrite(laser_serial, allOffCmd, 'uint8');
 end
+
+
+
+function testExposureAdjustment(vidobj)
+    % Function to test live preview and exposure adjustment
+    
+    % Start live preview
+    hFig = figure('Name', 'Live Preview', 'NumberTitle', 'off', 'MenuBar', 'none');
+    hAxes = axes('Parent', hFig);
+    hPreview = preview(vidobj, hAxes);
+    
+    % Create a UI for exposure adjustment
+    hSlider = uicontrol('Style', 'slider', 'Min', 1, 'Max', 1000, ...
+        'Value', vidobj.Exposure, 'Position', [10, 10, 120, 20], ...
+        'Callback', @updateExposure);
+    hLabel = uicontrol('Style', 'text', 'String', ['Exposure: ' num2str(vidobj.Exposure)], ...
+        'Position', [140, 10, 120, 20]);
+    
+    % Wait for the user to close the figure
+    uiwait(hFig);
+    
+    % Cleanup: Stop live preview
+    stoppreview(vidobj);
+    delete(hFig);
+
+    function updateExposure(~, ~)
+        % Callback function to update exposure when the slider is moved
+        newExposureValue = round(get(hSlider, 'Value'));
+        vidobj.Exposure = newExposureValue;
+        set(hLabel, 'String', ['Exposure: ' num2str(newExposureValue)]);
+    end
+end
+%% Been Tested 
 
 function movescopeBy(scope)
     currentPosition = get(scope.ZDrive.Position, 'DisplayString');

@@ -2,8 +2,14 @@
 function getCurrentPosition(app)
     writeline(stage, 'WHERE X Y');
     response = readline(app.stage);
-    position = sscanf(response, 'A X=%f Y=%f');
-    app.StagePosition = position;
+
+    % Extract numerical values from the response using regular expressions
+    pattern = '(-?\d+)';  % Match one or more digits, optionally preceded by a minus sign
+    matches = regexp(response, pattern, 'tokens');
+
+    % Convert the matched strings to numeric values
+    currentPosition = cellfun(@str2double, matches);
+    app.StagePosition = currentPosition;
     %app.CurrentPositionLabel.Text = sprintf('X=%.2f Y=%.2f Z=%.2f', app.StagePosition);
     
     
@@ -15,6 +21,6 @@ function getCurrentPosition(app)
     % Call the GetPosition method
     
     
-    app.ScopePosition = (newPosition*2.5)/100; %convert back to normal units?!? (not sure this works) 
+    app.ScopePosition = newPosition; %convert back to normal units?!? (not sure this works) 
 
 end

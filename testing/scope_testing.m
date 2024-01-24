@@ -2,7 +2,8 @@ try
     % Try to create an instance of the Nikon TiScope
     scope = actxserver('Nikon.TiScope.NikonTi');
     
-    get(scope); %not sure this will work but we can try to see the list of propeties 
+    get(scope); %not sure this will work but we can try to see the list of propeties and maybe objects?!? 
+
     % Get the current position of ZDrive
     currentPosition = get(scope.ZDrive.Position, 'DisplayString');
     disp(currentPosition);
@@ -12,6 +13,7 @@ try
     disp(shutterstatus);
    
     scope.LightPathDrive.ChangeLightPath(1) %this is the enum for L100
+    pause(2)
     
     % scope.Lasers.Connect(laser_serial)
     % Check the value of AuxShutter.IsOpened
@@ -28,8 +30,10 @@ try
     disp(shutterstatus);
     %scope.LU4ALaser.SaveObservationModeLU4A();
     %scope.Lasers.Connect(laser_serial);
+    release(scope);
 catch exception
     % Display error message
     disp(['Error: ' exception.message]);
+    release(scope);
     
 end

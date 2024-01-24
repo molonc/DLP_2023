@@ -36,11 +36,13 @@ for i = 1:rows
 
             %imaging 
             if app.checkCyan == 1
+                % create file for Cyan here 
                 turnonLaser(app, 470)
                 imaging(app,i,j,470);
                 turnoffLaser(app, 470)
             end
             if app.checkGreen == 1 
+                % create file for green here 
                 turnonLaser(app, 550)
                 imaging(app,i,j,550); 
                 turnoffLaser(app, 550); 
