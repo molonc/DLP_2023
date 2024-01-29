@@ -37,7 +37,7 @@ function testing_r2
 
     %% Microscope Connection --> Success it works exactly as written !!!!
 
-    scope = actxserver('Nikon.TiScope.NikonTi');
+    % scope = actxserver('Nikon.TiScope.NikonTi');
 
 
     %% Testing Begins!! (use scope testing to check the status of the shutters)
@@ -49,7 +49,8 @@ function testing_r2
     % movescopeBy(scope); %works
     % movescopeTo(scope); %works
     % Release the ActiveX server
-    release(scope);
+    
+    % release(scope);
 
     % liveviewwithSquares(vid); %doesn't work
     % takeandsaveimage(vid); % works
@@ -57,7 +58,8 @@ function testing_r2
     testExposureAdjustment(vid)
 
 
-    % movestageBy(stage); %works
+    movestageBy(stage);
+    movestageBy(stage);  
     % movestageTo(stage); %works
     % 
     % %Save some positions to a mat file
@@ -66,6 +68,7 @@ function testing_r2
     % save('stage_positions.mat', 'positionX', 'positionY');
     % 
     % movestagetoMat(stage); %works
+
     delete(stage);
     clear stage;
 
@@ -147,7 +150,6 @@ function testExposureAdjustment(vidobj)
         set(hLabel, 'String', ['Exposure: ' num2str(newExposureValue)]);
     end
 end
-%% Been Tested 
 
 function movescopeBy(scope)
     currentPosition = get(scope.ZDrive.Position, 'DisplayString');
@@ -167,6 +169,9 @@ function movescopeBy(scope)
     % Display the new position
     disp(['ZDrive moved from ' num2str(currentPosition) ' to ' num2str(newPosition) ' micrometers.']);
 end
+%% Been Tested 
+
+
 
 function movescopeTo(scope)
     currentPosition = get(scope.ZDrive.Position, 'DisplayString');
