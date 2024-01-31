@@ -1,18 +1,28 @@
 function imaging(app, row, col, wavelength)
     
     % make it so it cre
-    if isequal(wavelength,470)
-        folderName = 'Cyan';
-    elseif sequal(wavelength,550)
-        folderName = 'Green';
-    else
-        error('No valid wavelength selected.');
+    switch wavelength
+        case 440
+            folderName = 'Blue';
+        case 470
+            folderName = 'Cyan';
+        case 550
+            folderName = 'Green';
+        case 510
+            folderName = 'Teal';
+        case 395 % UV
+            folderName = 'UV';
+        case 640
+            folderName = 'Red';
+        otherwise
+            error('No valid wavelength selected.');
     end
 
     % Create folder based on selected wavelength
     wavelengthFolder = fullfile(app.dname, folderName);
-    if ~exist(wavelengthFolder, 'dir')
-        % If it doesn't exist, create it
+   
+    % If it doesn't exist, create it
+    if ~exist(wavelengthFolder, 'dir')        
         mkdir(wavelengthFolder);
     end
 

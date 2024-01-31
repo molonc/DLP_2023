@@ -27,26 +27,46 @@ for i = 1:rows
                 end
                 d.Message = "Acquisition Resuming at Row: " + i; 
             end
-            if app.checkBlue == 1 %if it's checked, the blue laser is turned on
-                turnonLaser(app, 440) %enables laser and sets its power
-            end
-            calcdisplacement(app, i, j);
-            turnoffLaser(app, 440)
+            
+            % Move to position
+
+            calcdisplacement(app, i, j);            
             
 
             %imaging 
-            if app.checkCyan == 1
+
+            if app.CheckCyan.Value == 1
                 % create file for Cyan here 
                 turnonLaser(app, 470)
                 imaging(app,i,j,470);
                 turnoffLaser(app, 470)
             end
-            if app.checkGreen == 1 
+            if app.CheckGreen.Value == 1 
                 % create file for green here 
                 turnonLaser(app, 550)
                 imaging(app,i,j,550); 
                 turnoffLaser(app, 550); 
-            end                  
+            end   
+            if app.CheckRed.Value
+                turnonLaser(app,640);
+                imaging(app,i,j,640);
+                turnoffLaser(app)
+            end
+            if app.CheckTeal.Value
+               turnonLaser(app,510);
+               imaging(app,i,j,510);
+               turnoffLaser(app,510);
+            end
+            if app.CheckBlue.Value
+                turnonLaser(app, 440);
+                imaging(app,i,j,440);
+                turnoffLaser(app,440);
+            end
+            if app.CheckUV.Value
+                turnonLaser(app, 395);
+                imaging(app,i,j,395);
+                turnoffLaser(app,395);
+            end               
         end
     else
         % For even rows, move right to left
@@ -60,22 +80,44 @@ for i = 1:rows
                 end
                 d.Message = "Acquisition Resuming at Row: " + i; 
             end
-            if app.checkBlue == 1 %if it's checked, the blue laser is turned on
-                turnonLaser(app, 440) %enables laser and sets its power
-            end
+            
+            % Move to position
             calcdisplacement(app, i, j);
-            turnoffLaser(app, 440)
+
             
             %imaging 
-            if app.checkCyan == 1
+
+            if app.CheckCyan.Value == 1
+                % create file for Cyan here 
                 turnonLaser(app, 470)
                 imaging(app,i,j,470);
                 turnoffLaser(app, 470)
             end
-            if app.checkGreen == 1 
+            if app.CheckGreen.Value == 1 
+                % create file for green here 
                 turnonLaser(app, 550)
                 imaging(app,i,j,550); 
                 turnoffLaser(app, 550); 
+            end   
+            if app.CheckRed.Value
+                turnonLaser(app,640);
+                imaging(app,i,j,640);
+                turnoffLaser(app)
+            end
+            if app.CheckTeal.Value
+               turnonLaser(app,510);
+               imaging(app,i,j,510);
+               turnoffLaser(app,510);
+            end
+            if app.CheckBlue.Value
+                turnonLaser(app, 440);
+                imaging(app,i,j,440);
+                turnoffLaser(app,440);
+            end
+            if app.CheckUV.Value
+                turnonLaser(app, 395);
+                imaging(app,i,j,395);
+                turnoffLaser(app,395);
             end  
         end
     end

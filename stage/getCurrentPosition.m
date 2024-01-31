@@ -1,6 +1,6 @@
 % getCurrentPosition.m
 function getCurrentPosition(app)
-    writeline(stage, 'WHERE X Y');
+    writeline(stage, 'WHERE X Y Z');
     response = readline(app.stage);
 
     % Extract numerical values from the response using regular expressions
