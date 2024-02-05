@@ -18,22 +18,24 @@ function testing_r2
     % Write commands to the serial port
     writeline(laser_serial, initCmd1);
     writeline(laser_serial, initCmd2);
-
-    %% Stage Connection
-
-    % Create a serial port object
-    stage = serialport('COM4', 115200);
-    configureTerminator(stage, "CR");  % Set Carriage Return as the terminator
-    timeoutDuration = 10;  % Set timeout duration in seconds
-    stage.Timeout = timeoutDuration;
     % 
-    %% Camera Connection 
-    
-    vid = videoinput('winvideo', 1,'RGB32_1920x1200'); % Changed to 1200 from 1140 on Jan 15 
-    % Set up video object properties (adjust as needed)
-    get(vid)
-    vid.FramesPerTrigger = Inf;
-    vid.ReturnedColorspace = 'rgb';
+    % %% Stage Connection
+    % 
+    % Create a serial port object
+    % stage = serialport('COM4', 115200);
+    % configureTerminator(stage, "CR");  % Set Carriage Return as the terminator
+    % timeoutDuration = 10;  % Set timeout duration in seconds
+    % stage.Timeout = timeoutDuration;
+    % % 
+    % %% Camera Connection 
+    % 
+    % % vid = videoinput('winvideo', 1,'RGB32_1920x1200'); % Changed to 1200 from 1140 on Jan 15 
+    % vid = videoinput('winvideo', 1); % try this also
+    % % Set up video object properties (adjust as needed)
+    % get(vid)
+    % vid.FramesPerTrigger = Inf;
+    % vid.ReturnedColorspace = 'rgb';
+    % vid.Exposure = 2;
 
     %% Microscope Connection --> Success it works exactly as written !!!!
 
@@ -55,11 +57,11 @@ function testing_r2
     % liveviewwithSquares(vid); %doesn't work
     % takeandsaveimage(vid); % works
     % testImageSplitting(vid); % kinda works
-    testExposureAdjustment(vid)
+    % testExposureAdjustment(vid)
 
 
-    movestageBy(stage);
-    movestageBy(stage);  
+    % movestageBy(stage);
+    % movestageBy(stage);  
     % movestageTo(stage); %works
     % 
     % %Save some positions to a mat file
@@ -69,8 +71,8 @@ function testing_r2
     % 
     % movestagetoMat(stage); %works
 
-    delete(stage);
-    clear stage;
+    % delete(stage);
+    % clear stage;
 
 end
 
@@ -84,33 +86,78 @@ function turnlaserson(laser_serial)
     powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
     fwrite(laser_serial, powerBlue, 'uint8');
 
-    pause(5);
-
-    turnlaseroff(laser_serial);
-
-    cyanOnCmd = sscanf('4F 7B 50', '%2X'); % hex values for serial communication
-    fwrite(laser_serial, cyanOnCmd, 'uint8');
+    pause(10);
     
-    cyanPowerDec = 130;
-    cyanPowerHex = dec2hex(255-cyanPowerDec, 2);
-    powerCyanCmd = sscanf(['53 18 03 02 F', cyanPowerHex, '0 50'], '%2X');
-    fwrite(laser_serial, powerCyanCmd, 'uint8');
+    allOffCmd = sscanf('4F 7F 50', '%2X');
+    fwrite(laser_serial, allOffCmd, 'uint8');
     
-    pause(5);
-
-    turnlaseroff(laser_serial);
+    disp("Disable All Command Sent");
     
-    greenOnCmd = sscanf('4F 7D 50', '%2X'); % hex values for serial communication
-    fwrite(laser_serial, greenOnCmd, 'uint8');  
+    % pause(10)
+    % 
+    % disp("Now Shutting power to Zero");
+    % 
+    % 
+    % bluePowerDec = 0; %get value for intensity
+    % bluePowerHex = dec2hex(255-bluePowerDec, 2); %convert intensity to a hex value
+    % powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
+    % fwrite(laser_serial, powerBlue, 'uint8');
+    % 
+    % pause(5);
 
-    greenPowerDec = 130;
-    greenPowerHex = dec2hex(255-greenPowerDec, 2);
-    powerGreenCmd = sscanf(['53 18 03 04 F', greenPowerHex, '0 50'], '%2X');
-    fwrite(laser_serial, powerGreenCmd, 'uint8'); 
+    % turnlaseroff(laser_serial);
 
-    pause(5);
-
-    turnlaseroff(laser_serial);    
+    % cyanOnCmd = sscanf('4F 7B 50', '%2X'); % hex values for serial communication
+    % fwrite(laser_serial, cyanOnCmd, 'uint8');
+    % 
+    % cyanPowerDec = 130;
+    % cyanPowerHex = dec2hex(255-cyanPowerDec, 2);
+    % powerCyanCmd = sscanf(['53 18 03 02 F', cyanPowerHex, '0 50'], '%2X');
+    % fwrite(laser_serial, powerCyanCmd, 'uint8');
+    % 
+    % pause(5);
+    % allOffCmd = sscanf('4F 7F 50', '%2X');
+    % fwrite(laser_serial, allOffCmd, 'uint8');
+    % 
+    % disp("Disable All Command Sent");
+    % 
+    % pause(10)
+    % 
+    % disp("Now Shutting power to Zero");
+    % 
+    % 
+    % bluePowerDec = 0; %get value for intensity
+    % bluePowerHex = dec2hex(255-bluePowerDec, 2); %convert intensity to a hex value
+    % powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
+    % fwrite(laser_serial, powerBlue, 'uint8');
+    % % 
+    % pause(5);
+    % 
+    % greenOnCmd = sscanf('4F 7D 50', '%2X'); % hex values for serial communication
+    % fwrite(laser_serial, greenOnCmd, 'uint8');  
+    % 
+    % greenPowerDec = 130;
+    % greenPowerHex = dec2hex(255-greenPowerDec, 2);
+    % powerGreenCmd = sscanf(['53 18 03 04 F', greenPowerHex, '0 50'], '%2X');
+    % fwrite(laser_serial, powerGreenCmd, 'uint8'); 
+    % 
+    % pause(5);
+    % allOffCmd = sscanf('4F 7F 50', '%2X');
+    % fwrite(laser_serial, allOffCmd, 'uint8');
+    % 
+    % disp("Disable All Command Sent");
+    % 
+    % pause(10)
+    % 
+    % disp("Now Shutting power to Zero");
+    % 
+    % 
+    % bluePowerDec = 0; %get value for intensity
+    % bluePowerHex = dec2hex(255-bluePowerDec, 2); %convert intensity to a hex value
+    % powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
+    % fwrite(laser_serial, powerBlue, 'uint8');
+    % 
+    % pause(5);  
 
 end
 

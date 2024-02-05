@@ -2,13 +2,13 @@
 function moveStage(app,corner)
     command = sprintf('M X=%.2f Y=%.2f', corner(1), corner(2));
     writeline(app.stage, command);
-    response = readline(stage);
-    
-    writeline(stage, '/');
-    response = readline(stage);  
+    response = readline(app.stage); % sends back :A when complete
+
+    writeline(app.stage, '/');
+    response = readline(app.stage);  
     while isequal(response,'N')
-        writeline(stage, '/');
-        response = readline(stage);
+        writeline(app.stage, '/');
+        response = readline(app.stage);
     end
     %waitBeforeMoving(app); %this should wait the correct amount of time 
 end

@@ -4,16 +4,22 @@ function imaging(app, row, col, wavelength)
     switch wavelength
         case 440
             folderName = 'Blue';
+            changeExposure(app,app.BlueExposure); 
         case 470
             folderName = 'Cyan';
+            changeExposure(app,app.CyanExposure);
         case 550
             folderName = 'Green';
+            changeExposure(app,app.GreenExposure);
         case 510
             folderName = 'Teal';
+            changeExposure(app,app.TealExposure);
         case 395 % UV
             folderName = 'UV';
+            changeExposure(app,app.UVExposure);
         case 640
             folderName = 'Red';
+            changeExposure(app,app.RedExposure);
         otherwise
             error('No valid wavelength selected.');
     end
@@ -25,7 +31,7 @@ function imaging(app, row, col, wavelength)
     if ~exist(wavelengthFolder, 'dir')        
         mkdir(wavelengthFolder);
     end
-
+    c
     % Capture an image using the provided video object
     inputImage = getsnapshot(app.vidobj);
 
@@ -47,6 +53,11 @@ function imaging(app, row, col, wavelength)
     %     end
     % end
 
+end
+
+function changeExposure(app,value)
+    src = getselectedsource(app.vidobj);
+    src.Exposure = value;
 end
 
 function splitAndSaveImage(inputImage, folder, row, col, wavelength)

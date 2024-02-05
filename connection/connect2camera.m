@@ -1,6 +1,5 @@
 function [app] = connect2camera(app)
-    vid = videoinput('winvideo', 1,'RGB32_1920x1144');
-    %videoinput()
+    vid = videoinput('pointgrey', 1);
     % Set up video object properties (adjust as needed)
     vid.FramesPerTrigger = Inf;
     vid.ReturnedColorspace = 'rgb';

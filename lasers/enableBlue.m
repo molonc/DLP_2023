@@ -1,7 +1,7 @@
-function [app] = enableBlue(app)
+function enableBlue(app)
     blueOnCmd = sscanf('4F 5F 50', '%2X'); % hex values for serial communication
     fwrite(app.laser, blueOnCmd, 'uint8');
-  
+end
 
 %Alternative
 

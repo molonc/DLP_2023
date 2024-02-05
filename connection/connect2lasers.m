@@ -18,5 +18,7 @@ function [app] = connect2lasers(app)
     app.laserconnectionLabel.FontColor = "#77AC30";
     app.laserconnectionLabel.Text = "Connected";
 
+    app.laser = laser_serial;
+
 
     

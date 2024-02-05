@@ -3,22 +3,44 @@ stage = serialport('COM4', 115200);
 configureTerminator(stage, "CR");  % Set Carriage Return as the terminator
 timeoutDuration = 10;  % Set timeout duration in seconds
 stage.Timeout = timeoutDuration;
+% readline(stage)
 
-% Send a command and read the response
-try
-    writeline(stage, 'WHERE X Y Z');  % Example MOVE command
-    response = readline(stage);  
-    disp(response); %returns -251877 412279 meaning -25.1877 mm and 41.22mm 
-    writeline(stage, 'MOVE X=-20 Y=20') % moves it t 0.0006mm and 0.0008 (note -20 means athe mosition 2 microns away from origin so obviosly hasrd to be super accurate 
+
+validPosition = false;
+
+while ~validPosition
+    % Send a command and read the response
+    writeline(stage, 'WHERE X Y Z');
     response = readline(stage);
-    disp(response); 
-catch exception
-    disp(['Error: ' exception.message]);
-end
+    display(response);
 
-% Close the serial port
-delete(stage);
-clear stage;
+    % Extract numerical values from the response using sscanf
+    position = sscanf(response, ':A %f %f');
+
+    % Check if a valid position is obtained
+    if numel(position) == 2
+        validPosition = true;
+        disp('Valid position obtained:');
+        disp(position(1));
+        disp(position(2));
+    else
+        disp('Invalid position. Retrying...');
+    end
+end% Send a command and read the response
+
+% Extract numerical values from the response using regular expressions
+% pattern = '(-?\d+)';  % Match one or more digits, optionally preceded by a minus sign
+% matches = regexp(response, pattern, 'tokens');
+% 
+% % Convert the matched strings to numeric values
+% currentPosition = cellfun(@str2double, matches);
+% 
+% 
+% position = sscanf(currentPosition, '%f %f');
+% disp(position);
+
+delete(stage)
+clear stage
 
 
 

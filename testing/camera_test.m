@@ -1,13 +1,50 @@
 %info = imaqhwinfo
-vid = videoinput('winvideo', 1,'RGB32_1920x1144');
+vid = videoinput('pointgrey', 1);
 %videoinput()
 % Set up video object properties (adjust as needed)
 vid.FramesPerTrigger = Inf;
 vid.ReturnedColorspace = 'rgb';
+src = getselectedsource(vid);
+src.Exposure = 0.0386;
+get(src);
+% Testing the Lasers 
+laser_serial = serialport('COM3', 9600);
+fopen(laser_serial)
+laser_serial.DataBits = 8;
+laser_serial.Parity = 'none';
+laser_serial.StopBits = 1;
+laser_serial.FlowControl = 'none';
+configureTerminator(laser_serial, 13);
 
-  
+% Initialize commands
+initCmd1 = '57 02 FF 50';
+initCmd2 = '57 03 AB 50';
+
+% Write commands to the serial port
+writeline(laser_serial, initCmd1);
+writeline(laser_serial, initCmd2);
+
+
+blueOnCmd = sscanf('4F 5F 50', '%2X'); % hex values for serial communication
+fwrite(laser_serial, blueOnCmd, 'uint8');
+
+
+% get(vid);
 % Start the video input object for preview
 preview(vid);
+
+bluePowerDec = 130; %get value for intensity (on scale of 0-255) 
+bluePowerHex = dec2hex(255-bluePowerDec, 2); %convert intensity to a hex value
+powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
+fwrite(laser_serial, powerBlue, 'uint8');
+
+pause(60);
+
+allOffCmd = sscanf('4F 7F 50', '%2X');
+fwrite(laser_serial, allOffCmd, 'uint8');
+
+delete(laser_serial)
+clear laser_serial
 % Get the live image
             
 % Get the selected source and set ExposureTimeControl

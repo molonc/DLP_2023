@@ -1,15 +1,26 @@
 % getCurrentPosition.m
 function getCurrentPosition(app)
-    writeline(stage, 'WHERE X Y Z');
+    
+    % writeline(app.stage, '/'); % to make sure it is not busy 
+    % response = readline(app.stage);  
+    % while isequal(response,'N')
+    %     writeline(app.stage, '/');
+    %     response = readline(app.stage);
+    % end
+    % response = readline(app.stage);
+    writeline(app.stage, 'WHERE X Y Z');
     response = readline(app.stage);
-
+    disp(response);
+    
     % Extract numerical values from the response using regular expressions
-    pattern = '(-?\d+)';  % Match one or more digits, optionally preceded by a minus sign
-    matches = regexp(response, pattern, 'tokens');
+    position = sscanf(response, ':A %f %f');
+    
+    disp(position);
 
-    % Convert the matched strings to numeric values
-    currentPosition = cellfun(@str2double, matches);
-    app.StagePosition = currentPosition;
+    app.StagePosition(1) = position(1);
+    app.StagePosition(2) = position(2);
+
+
     %app.CurrentPositionLabel.Text = sprintf('X=%.2f Y=%.2f Z=%.2f', app.StagePosition);
     
     
@@ -17,7 +28,7 @@ function getCurrentPosition(app)
 
     % Define variables to store positions
     
-    newPosition = get(scope.ZDrive.Position, 'DisplayString');
+    newPosition = get(app.ti.ZDrive.Position, 'DisplayString');
     % Call the GetPosition method
     
     

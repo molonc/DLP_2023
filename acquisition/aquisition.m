@@ -36,33 +36,37 @@ for i = 1:rows
             %imaging 
 
             if app.CheckCyan.Value == 1
-                % create file for Cyan here 
+                changeFilterCube(app, app.CyanFC);
                 turnonLaser(app, 470)
                 imaging(app,i,j,470);
                 turnoffLaser(app, 470)
             end
             if app.CheckGreen.Value == 1 
-                % create file for green here 
+                changeFilterCube(app, app.GreenFC);
                 turnonLaser(app, 550)
                 imaging(app,i,j,550); 
                 turnoffLaser(app, 550); 
             end   
             if app.CheckRed.Value
+                changeFilterCube(app, app.RedFC);
                 turnonLaser(app,640);
                 imaging(app,i,j,640);
                 turnoffLaser(app)
             end
             if app.CheckTeal.Value
+                changeFilterCube(app, app.TealFC);
                turnonLaser(app,510);
                imaging(app,i,j,510);
                turnoffLaser(app,510);
             end
             if app.CheckBlue.Value
+                changeFilterCube(app, app.BlueFC);
                 turnonLaser(app, 440);
                 imaging(app,i,j,440);
                 turnoffLaser(app,440);
             end
             if app.CheckUV.Value
+                changeFilterCube(app, app.UVFC);
                 turnonLaser(app, 395);
                 imaging(app,i,j,395);
                 turnoffLaser(app,395);
