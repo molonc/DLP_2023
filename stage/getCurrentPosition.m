@@ -15,7 +15,7 @@ function getCurrentPosition(app)
     % Extract numerical values from the response using regular expressions
     position = sscanf(response, ':A %f %f');
     
-    disp(position);
+    disp(position); % this is just for testing 
 
     app.StagePosition(1) = position(1);
     app.StagePosition(2) = position(2);

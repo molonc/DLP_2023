@@ -8,25 +8,20 @@ function calcdisplacement(app, i, j) % i is rows and j is collumns
     %this is to zero the postions 
     i = i-1;
     j= j-1;
-
-
-
+    
     % step size to get to next tile along x 
     xstep = (app.topright(1) - app.topleft(1))/23; % i think it should be one less since we are starting at topleft 
-    % step size as you move down to the next tile in y
+    % step size as you move down to the next 7tile in y
     ystep = (app.bottomleft(2)-app.topleft(2))/35; 
     %how y changes as it moves down along x 
     ydispinx = (app.topright(2) - app.topleft(2))/23;
     % hgow x changes as it moves along y 
     xdispiny = (app.bottomleft(1) - app.topright(1))/35; 
-
     
     %this is finding the next tiles position based on a i and j
     %cooridinate 
     app.imagingtile(1) = app.topleft(1) + i*xstep + j*xdispiny;
     app.imagingtile(2) = app.topleft(2) + j*ystep + i*ydispinx;
-   
-
 
     %this is for the scope
     zdispinx = (app.tr_scope - app.tl_scope)/23;

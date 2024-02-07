@@ -31,27 +31,12 @@ function imaging(app, row, col, wavelength)
     if ~exist(wavelengthFolder, 'dir')        
         mkdir(wavelengthFolder);
     end
-    c
+    
     % Capture an image using the provided video object
     inputImage = getsnapshot(app.vidobj);
 
     % Use the splitAndSaveImage function
     splitAndSaveImage(inputImage, wavelengthFolder, row, col, wavelength);
-
-    % % Display the split images in a 2x3 matrix
-    % for i = 1:2
-    %     for j = 1:3
-    %         % Calculate the current subplot index
-    %         subplotIndex = (i - 1) * 3 + j;
-    % 
-    %         % Check if the subplot index is within bounds
-    %         if subplotIndex <= numel(splitImage)
-    %             subplot(2, 3, subplotIndex);
-    %             imshow(splitImage{subplotIndex}, 'InitialMagnification', 'fit');
-    %             title(['Split ' num2str(i) '-' num2str(j)]);
-    %         end
-    %     end
-    % end
 
 end
 

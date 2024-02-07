@@ -7,35 +7,15 @@ scope = actxserver('Nikon.TiScope.NikonTi');
 currentPosition = get(scope.ZDrive.Position, 'DisplayString');
 disp(currentPosition);
 
-%This is to check the shutter open
-% shutterstatus = get(scope.LU4ALaser.IsOpenShutter,'DisplayString');
-% disp(shutterstatus);
-
-% set(scope.LightPathDrive.ChangeLightPath,1) %this is the enum for L100
-
-% scope.Lasers.Connect(laser_serial)
-% Check the value of AuxShutter.IsOpened
-% shutterstatus = get(scope.Laser.IsOpenShutter,'DisplayString');
-% disp(shutterstatus);
-
-
-% shutterstatus = set(scope.LU4ALaser,'IsOpenShutter', 1); %assuming 1 is open ?!? and that scope.LU4ALaser works as the object to pass into set 
-% 
-% shutterstatus = get(scope.AuxShutter.IsOpened,'DisplayString');
-% disp(shutterstatus);
-% 
-% shutterstatus = get(scope.EpiShutter.IsOpened,'DisplayString');
-% disp(shutterstatus);
-%scope.LU4ALaser.SaveObservationModeLU4A();
-%scope.Lasers.Connect(laser_serial);
-
+scope.LightPathDrive.ChangeLightPath(2); % not sure if this is how to do it
+% scope.LightPathDrive.ChangeLightPath("L100");
 % this could be our issue with the laser not showing up needs to be set to mcherry
-% filterblock = get(scope.FilterBlock.FilterType, 'DisplayString'); 
-% disp(filterblock);
+filterblock = get(scope.FilterBlockCassette1.Position, 'DisplayString'); 
+disp(filterblock);
 % 
-% scope.FilterBlockCassette1.FilterBlocks(3 % need to figure out what position contains which filter
-scope.FilterBlockCassette1.Forward()
-% filterblock = get(scope.FilterBlockCassette1.FilterBlocks, 'DisplayString');
+
+% scope.FilterBlockCassette1.Forward()
+
 
 
 
