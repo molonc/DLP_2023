@@ -8,12 +8,10 @@ function [app] = connect2lasers(app)
     configureTerminator(laser_serial, 13);
     
     % Initialize commands
-    initCmd1 = '57 02 FF 50';
-    initCmd2 = '57 03 AB 50';
-    
-    % Write commands to the serial port
-    writeline(laser_serial, initCmd1);
-    writeline(laser_serial, initCmd2);
+    initCmd1 = sscanf('57 02 FF 50', '%2X');
+    initCmd2 = sscanf('57 03 AB 50', '%2X');
+    fwrite(laser_serial, initCmd1, 'uint8');
+    fwrite(laser_serial, initCmd2, 'uint8');
 
     app.laserconnectionLabel.FontColor = "#77AC30";
     app.laserconnectionLabel.Text = "Connected";

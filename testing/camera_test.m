@@ -1,6 +1,7 @@
 %info = imaqhwinfo
-vid = videoinput('pointgrey', 1);
-%videoinput()
+% % vid = videoinput('pointgrey', 1);
+vid = videoinput('pointgrey', 1,'F7_Raw8_1920x1200_Mode0'); % this works and sets it to the correct frames for splitting
+get(vid) % see what the current mode it is set at :) 
 % Set up video object properties (adjust as needed)
 vid.FramesPerTrigger = Inf;
 vid.ReturnedColorspace = 'rgb';
@@ -31,9 +32,10 @@ fwrite(laser_serial, blueOnCmd, 'uint8');
 
 % get(vid);
 % Start the video input object for preview
-preview(vid);
+image = getsnapshot(vid);
 
-bluePowerDec = 130; %get value for intensity (on scale of 0-255) 
+imshow(image);
+bluePowerDec = 4; %get value for intensity (on scale of 0-255) 
 bluePowerHex = dec2hex(255-bluePowerDec, 2); %convert intensity to a hex value
 powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
 fwrite(laser_serial, powerBlue, 'uint8');

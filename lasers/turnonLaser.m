@@ -5,7 +5,7 @@ function turnonLaser(app, wavelength)
             powerBlue(app, app.BLUEEditField.Value);
         case 470
             enableCyan(app);
-            powerCyan(app, app.UVEditField.Value);
+            powerCyan(app, app.CYANEditField.Value);
         case 550
             enableGreen(app);
             powerGreen(app, app.GREENEditField.Value);

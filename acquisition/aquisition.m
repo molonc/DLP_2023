@@ -1,49 +1,45 @@
 % this is aquisition.m 
 function aquisition (app)
        % Assuming you have a 24x36 matrix named 'inputMatrix'
-    rows = 24;
-    cols = 36;
+    rows = 36;
+    cols = 24;
     
     % d is te progress bar that will pop up during acquisition
-    d = uiprogressdlg(fig,'Single Cell Acquisition Progress','Please Wait',...
-            'Message','Starting Acquisition');
+    % d = uiprogressdlg(fig,'Single Cell Acquisition Progress','Please Wait',...
+    %         'Message','Starting Acquisition');
     pause(2)
     
     
-    %this is just the loop format for moving along the matrix in a snaking
-    %pattern
-    
+    %this is just the loop format for moving along the matrix in a snaking pattern
     for i = 1:rows
         % For odd rows, move left to right
-        d.Message = "Acquiring Data Current Row: " + i;
+        % d.Message = "Acquiring Data Current Row: " + i;
         if mod(i, 2) ~= 0
             for j = 1:cols
-               if app.PauseAcquisition
-                    % Update the progress dialog message
-                    d.Message = "Acquisition Paused at Row: " + i;
-                     
-                    while app.PauseAcquisition
-                        pause(3); % Adjust the pause duration as needed
-                    end
-                    d.Message = "Acquisition Resuming at Row: " + i; 
-                end
+               % if app.PauseAcquisition
+               %      % Update the progress dialog message
+               %      d.Message = "Acquisition Paused at Row: " + i;
+               % 
+               %      while app.PauseAcquisition
+               %          pause(3); % Adjust the pause duration as needed
+               %      end
+               %      d.Message = "Acquisition Resuming at Row: " + i; 
+               %  end
                 
                 % Move to position
-    
                 calcdisplacement(app, i, j);            
-                
-    
+                   
                 %imaging 
     
                 if app.CheckCyan.Value == 1
                     changeFilterCube(app, app.CyanFC);
-                    turnonLaser(app, 470)
+                    turnonLaser(app, 470);
                     imaging(app,i,j,470);
-                    turnoffLaser(app, 470)
+                    turnoffLaser(app, 470);
                 end
                 if app.CheckGreen.Value == 1 
                     changeFilterCube(app, app.GreenFC);
-                    turnonLaser(app, 550)
+                    turnonLaser(app, 550);
                     imaging(app,i,j,550); 
                     turnoffLaser(app, 550); 
                 end   
@@ -51,13 +47,13 @@ function aquisition (app)
                     changeFilterCube(app, app.RedFC);
                     turnonLaser(app,640);
                     imaging(app,i,j,640);
-                    turnoffLaser(app)
+                    turnoffLaser(app,640)
                 end
                 if app.CheckTeal.Value
                     changeFilterCube(app, app.TealFC);
-                   turnonLaser(app,510);
-                   imaging(app,i,j,510);
-                   turnoffLaser(app,510);
+                    turnonLaser(app,510);
+                    imaging(app,i,j,510);
+                    turnoffLaser(app,510);
                 end
                 if app.CheckBlue.Value
                     changeFilterCube(app, app.BlueFC);
@@ -75,15 +71,15 @@ function aquisition (app)
         else
             % For even rows, move right to left
             for j = cols:-1:1
-                if app.PauseAcquisition
-                    % Update the progress dialog message
-                    d.Message = "Acquisition Paused at Row: " + i;
-                     
-                    while app.PauseAcquisition
-                        pause(3); % Adjust the pause duration as needed
-                    end
-                    d.Message = "Acquisition Resuming at Row: " + i; 
-                end
+                % if app.PauseAcquisition
+                %     % Update the progress dialog message
+                %     d.Message = "Acquisition Paused at Row: " + i;
+                % 
+                %     while app.PauseAcquisition
+                %         pause(3); % Adjust the pause duration as needed
+                %     end
+                %     d.Message = "Acquisition Resuming at Row: " + i; 
+                % end
                 
                 % Move to position
                 calcdisplacement(app, i, j);
@@ -107,13 +103,13 @@ function aquisition (app)
                     changeFilterCube(app, app.RedFC);
                     turnonLaser(app,640);
                     imaging(app,i,j,640);
-                    turnoffLaser(app)
+                    turnoffLaser(app,640)
                 end
                 if app.CheckTeal.Value
                     changeFilterCube(app, app.TealFC);
-                   turnonLaser(app,510);
-                   imaging(app,i,j,510);
-                   turnoffLaser(app,510);
+                    turnonLaser(app,510);
+                    imaging(app,i,j,510);
+                    turnoffLaser(app,510);
                 end
                 if app.CheckBlue.Value
                     changeFilterCube(app, app.BlueFC);
@@ -126,13 +122,13 @@ function aquisition (app)
                     turnonLaser(app, 395);
                     imaging(app,i,j,395);
                     turnoffLaser(app,395);
-                end  
+                end               
             end
         end
-        d.Value = i/24;
+        % d.Value = i/24;
     end
-    d.Value = 1; 
-    d.Message = "Acquisition Completed"; 
+    % d.Value = 1; 
+    % d.Message = "Acquisition Completed"; 
     pause(2);
-    close(d)
+    % close(d)
 end

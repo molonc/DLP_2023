@@ -1,9 +1,10 @@
 % connect2stage.m
 function connect2stage(app,comPort)
-    app.stage = serialport(comPort, 115200);
-    configureTerminator(app.stage, "CR");  % Set Carriage Return as the terminator
+    stage = serialport(comPort, 115200);
+    configureTerminator(stage, "CR");  % Set Carriage Return as the terminator
     timeoutDuration = 10;  % Set timeout duration in seconds
-    app.stage.Timeout = timeoutDuration;
+    stage.Timeout = timeoutDuration;
+    app.stage = stage;
     % response = readline(app.stage); % dont need 
     app.stageconnectionLabel.FontColor = "#77AC30";
     app.stageconnectionLabel.Text = "Connected";

@@ -2,7 +2,7 @@
 function moveStageY(app, distance)
     command = sprintf('R X Y=%.2f Z', distance);
     writeline(app.stage, command);
-    response = readline(app.stage); % sends back :A when complete
+    [~] = readline(app.stage); % sends back :A when complete
     
     writeline(app.stage, '/');
     response = readline(app.stage);  

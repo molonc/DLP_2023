@@ -33,13 +33,13 @@ bluePowerHex = dec2hex(255-bluePowerDec, 2); %convert intensity to a hex value
 powerBlue = sscanf(['53 1A 03 01 F', bluePowerHex, '0 50'], '%2X');
 fwrite(laser_serial, powerBlue, 'uint8');
 
-pause(30);
+pause(3);
 
 allOffCmd = sscanf('4F 7F 50', '%2X');
 fwrite(laser_serial, allOffCmd, 'uint8');
 
 disp("Disable All Command Sent");
-pause(10)
+pause(3)
 
 disp("Now Shutting power to Zero");
 

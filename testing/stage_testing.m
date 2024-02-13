@@ -26,6 +26,8 @@ while ~validPosition
     else
         disp('Invalid position. Retrying...');
     end
+
+    disp(1);
 end% Send a command and read the response
 
 % Extract numerical values from the response using regular expressions

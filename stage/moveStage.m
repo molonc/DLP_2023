@@ -2,7 +2,7 @@
 function moveStage(app,corner)
     command = sprintf('M X=%.2f Y=%.2f', corner(1), corner(2));
     writeline(app.stage, command);
-    response = readline(app.stage); % sends back :A when complete
+    [~] = readline(app.stage); % sends back :A when complete
 
     writeline(app.stage, '/');
     response = readline(app.stage);  
