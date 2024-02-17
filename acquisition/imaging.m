@@ -36,7 +36,7 @@ function imaging(app, row, col, wavelength)
     inputImage = getsnapshot(app.vidobj);
 
     % Use the splitAndSaveImage function
-    splitAndSaveImage(inputImage, wavelengthFolder, row, col, wavelength);
+    splitAndSaveImage(inputImage, wavelengthFolder, row, col, folderName);
 
 end
 
@@ -80,10 +80,48 @@ function splitAndSaveImage(inputImage, folder, row, col, wavelength)
 end
 
 function saveSplitImages(splitImage, folder, row, col, wavelength)
-    % Save the split images
+    % Create S0000 folder inside the wavelength folder
+    S0000Folder = fullfile(folder, 'S0000');
+    if ~exist(S0000Folder, 'dir')
+        mkdir(S0000Folder);
+    end
+    
+    % Loop through all the split images
     for k = 1:numel(splitImage)
-        fileName = sprintf('Image_Wavelength%d_Row%d_Col%d_Part%d.tif', wavelength, row, col, k);
-        fullFileName = fullfile(folder, fileName);
+        % Calculate the row and column indices for the split image
+        % based on the original 72x72 matrix grid
+        imageRow = 2 * (row - 1) + ceil(k / 3);  % Calculate the actual row index
+        imageCol = 3 * (col - 1) + mod(k - 1, 3) + 1;  % Calculate the actual column index
+        
+        if imageRow > 72
+            imageRow = imageRow - 72;
+        end
+        if imageCol > 72
+            imageCol = imageCol - 72;
+        end
+        % Calculate the corresponding column folder name (e.g., C01, C02, ..., C72)
+        columnFolder = sprintf('C%02d', imageCol);
+        columnFolderPath = fullfile(S0000Folder, columnFolder);
+        
+        % Create the column folder if it doesn't exist
+        if ~exist(columnFolderPath, 'dir')
+            mkdir(columnFolderPath);
+        end
+        if isequal(wavelength, 'Cyan')
+            imnum = 0;
+        else
+            imnum = 1;
+        end
+
+        % Construct the file name with row and column information
+        fileName = sprintf('R%02d_C%02d_0000_%02d_%s.tif', ...
+            imageRow, imageCol, imnum, wavelength);
+
+
+        % Save the split image into the corresponding column folder
+        fullFileName = fullfile(columnFolderPath, fileName);
         imwrite(splitImage{k}, fullFileName);
     end
 end
+
+

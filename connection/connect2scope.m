@@ -8,7 +8,7 @@ function connect2scope(app)
     current_position = str2double(current_position_str);
     app.filtercubeposition = current_position;
     moveFilterCube(app,3);
-
+    moveFilterCube(app,3);
     app.MicroscopecoonectionLabel.FontColor = "#77AC30";
     app.MicroscopecoonectionLabel.Text = "Connected";
 end
