@@ -34,7 +34,7 @@ function imaging(app, row, col, wavelength)
     
     % Capture an image using the provided video object
     inputImage = getsnapshot(app.vidobj);
-
+    inputImage = im2uint16(rgb2gray(inputImage));
     % Use the splitAndSaveImage function
     splitAndSaveImage(inputImage, wavelengthFolder, row, col, folderName);
 
@@ -107,10 +107,21 @@ function saveSplitImages(splitImage, folder, row, col, wavelength)
         if ~exist(columnFolderPath, 'dir')
             mkdir(columnFolderPath);
         end
+        
         if isequal(wavelength, 'Cyan')
             imnum = 0;
-        else
+        elseif isequal(wavelength, 'Green')
             imnum = 1;
+        elseif isequal(wavelength, 'UV')
+            imnum = 2;
+        elseif isequal(wavelength, 'Blue')
+            imnum = 3;
+        elseif isequal(wavelength, 'Teal')
+            imnum = 4;
+        elseif isequal(wavelength, 'Red')
+            imnum = 5;
+        else
+            error('Invalid wavelength');
         end
 
         % Construct the file name with row and column information
