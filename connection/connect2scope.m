@@ -7,7 +7,7 @@ function connect2scope(app)
     current_position_str = get(app.ti.FilterBlockCassette1.Position, 'DisplayString');
     current_position = str2double(current_position_str);
     app.filtercubeposition = current_position;
-    moveFilterCube(app,3);
+    moveFilterCube(app,1);
     moveFilterCube(app,3);
     app.MicroscopecoonectionLabel.FontColor = "#77AC30";
     app.MicroscopecoonectionLabel.Text = "Connected";

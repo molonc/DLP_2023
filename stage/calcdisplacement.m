@@ -22,7 +22,8 @@ function calcdisplacement(app, i, j) % i is rows and j is collumns
     %cooridinate 
     app.imagingtile(1) = app.topleft(1) + j*xstep + i*xdispiny;
     app.imagingtile(2) = app.topleft(2) + i*ystep + j*ydispinx;
-
+    
+    moveStage(app, app.imagingtile);
     %this is for the scope
     zdispinx = (app.tr_scope - app.tl_scope)/23;
     zdispiny = (app.bl_scope - app.tl_scope)/35; 
@@ -30,7 +31,9 @@ function calcdisplacement(app, i, j) % i is rows and j is collumns
     scope_postion = app.tl_scope + zdispinx*j + zdispiny*i;
     
     %this is for if we want calc postion to move to the next tile as well 
-    moveStage(app, app.imagingtile);
     moveScopeAbsZ(app,scope_postion); 
+    
+    pause(0.1);
+
 
 end 

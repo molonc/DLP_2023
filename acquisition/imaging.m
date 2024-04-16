@@ -35,9 +35,11 @@ function imaging(app, row, col, wavelength)
     % Capture an image using the provided video object
     inputImage = getsnapshot(app.vidobj);
     inputImage = im2uint16(rgb2gray(inputImage));
+    imshow(inputImage);
+    title(sprintf('Row: %d, Column: %d, Wavelength: %d', row, col, wavelength));
     % Use the splitAndSaveImage function
     splitAndSaveImage(inputImage, wavelengthFolder, row, col, folderName);
-
+ 
 end
 
 function changeExposure(app,value)

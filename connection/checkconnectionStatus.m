@@ -4,5 +4,5 @@ function checkconnectionStatus(app)
         app.systemreadyStatus.FontColor = "#77AC30";
         app.systemreadyStatus.Text = "Instruments Connected waiting for Tile Selection"; 
     end
-        
+    if app.tile
 end
