@@ -33,7 +33,7 @@ function calcdisplacement(app, i, j) % i is rows and j is collumns
     %this is for if we want calc postion to move to the next tile as well 
     moveScopeAbsZ(app,scope_postion); 
     
-    pause(0.1);
+    pause(0.1); % it should wait anyways but just to give it time
 
 
 end 
