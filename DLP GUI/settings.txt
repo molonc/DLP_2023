@@ -1,0 +1,24 @@
+Top Left Stage Cooridinates: [342463 -144279]
+Top Right Stage Cooridinates: [-31366 -145553]
+Bottom Left Stage Cooridinates: [341506 235406]
+Top Left Scope Z: 4793.525000
+Top Right Scope Z: 4793.500000
+Bottom Left Scope Z: 4893.350000
+Cyan Exposure: 0.100000
+Green Exposure: 0.100000
+Blue Exposure: 0.100000
+UV Exposure: 0.100000
+Teal Exposure: 0.100000
+Red Exposure: 0.100000
+Cyan Power: 255.000000
+Green Power: 255.000000
+Blue Power: 4.000000
+UV Power: 0.000000
+Teal Power: 13.000000
+Red Powere: 0.000000
+Cyan Filter Cube: 
+Green Filter Cube: 
+Blue Filter Cube: 
+UV Filter Cube: 
+Teal Filter Cube: 
+Red Filter Cube: 
