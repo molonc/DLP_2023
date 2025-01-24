@@ -1,0 +1,31 @@
+function [bright_mask, mask, multi_object] = mask_cell(image_path, threshold,erode_area)
+    img = imread(image_path);
+    
+    % threshold with binary opening to supress small objects
+    mask = imopen(img > threshold,ones(erode_area));
+    
+    %returns
+    bright_mask = mask;
+    multi_object = false;
+    objs = bwlabel(mask,4);
+
+    %check brightness of mutliple objects detected
+    % return brightest object
+    if max(objs(:)) > 1
+        brightest = 0;
+        index = 0;
+        for i=1:length(unique(objs(:)))
+            intensities = (objs == i) .* mask;
+
+            cell_max = max(intensities(:));
+            if cell_max > brightest
+                brightest = cell_max;
+                index = i;
+            end
+        end
+
+        bright_mask = objs == index;
+        multi_object = true;
+    end
+    
+end
