@@ -1,6 +1,4 @@
-function [bright_mask, mask, multi_object] = mask_cell(image_path, threshold,erode_area)
-    img = imread(image_path);
-    
+function [bright_mask, mask, multi_object] = mask_cell(img, threshold,erode_area)    
     % threshold with binary opening to supress small objects
     mask = imopen(img > threshold,ones(erode_area));
     
