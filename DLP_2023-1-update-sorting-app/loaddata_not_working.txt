@@ -1,0 +1,150 @@
+function LoadDataButtonValueChanged(app, event)
+            value = app.LoadDataButton.Value;
+            FileName_excel_Results = sprintf('SmartChipData_A%06i%s_Results.xls', app.ChipIDEditField.Value, app.dropdown.Value);
+            fullFileName_excel_Results = fullfile(app.folder_location, FileName_excel_Results);
+            t = readtable(fullFileName_excel_Results, 'Sheet','Summary'); % storing the Selected_Spots excel
+            summary = table2cell(t);
+            app.status = summary; 
+            table = readtable(fullFileName_excel_Results, 'Sheet','Obj_Selected');
+            app.image_properties = table2cell(table);
+            idx = 1;
+            excelnumberMatrix = zeros(72,72);
+            for i = 1:app.EditField_10.Value * app.EditField_11.Value
+                excelnumberMatrix(str2double(app.status(i,2)),str2double(app.status(i,3))) = i;
+                app.for_Display(i+1,1) = app.status(i,2);
+                app.for_Display(i+1,2) = app.status(i,3);
+                app.for_Display(i+1,3) = app.status(i,16);
+               
+                app.for_Display(i+1,6) = app.status(i,21);
+                if isequal(app.image_properties(idx,1), app.status(i,1))
+                    app.for_Display(i+1,4) = app.image_properties(idx,9);
+                    app.for_Display(i+1,5) = app.image_properties(idx,13);
+                    if isequal(app.image_properties(idx,1),app.image_properties(idx+1,1)) & size(app.image_properties,1) > idx + 1
+                        while isequal(app.image_properties(idx,1),app.image_properties(idx+1,1)) & size(app.image_properties,1) > idx + 1
+                            idx = idx+1;
+                        end
+                    else
+                        idx = idx+1;
+                    end
+                else
+                    app.for_Display(i+1,4) = "-";
+                    app.for_Display(i+1,5) = "-";
+                end
+            end
+            % disp(excelnumberMatrix)
+            app.enMatrix = excelnumberMatrix;
+            app.UITable.Data = app.for_Display;
+            app.SaveButton.Visible = "on";
+        end
+
+
+
+
+
+
+
+%% THIS IS THE CODE FOR THE OPTIMIZED UPDATE THRESHOLDS BUT IT WILL ONLY RE_ANALYZE DATA THAT HAD AN OBJECT DETECTED WITH PREVIOUS SETTINGS 
+
+            % app.UpdateThreshholdsButton.Visible = 'off';
+app.TileviewButton.Visible = "off";
+app.SaveButton.Visible = "off";
+% app.CellSortingThreshholdingPanel.Visible = 'off';
+
+pause(2);
+
+FileName_excel = sprintf('SmartChipData_A%06i%s.xls', app.ChipIDEditField.Value, app.dropdown.Value);
+fullFileName_excel = fullfile(app.folder_location, FileName_excel);
+
+expControls = readtable(fullFileName_excel,"Sheet","SmartChip_Info", "Range","B51:B56");
+expControls = table2cell(expControls); 
+
+
+app.excelnumber = app.enMatrix(app.StartRowEditField.Value,3); % issue is since nothing is detected it doesn't even analyze it when sometimes 
+app.num_detected = 2;
+enumber =  app.excelnumber+2;
+% disp(~strcmp(char(app.status(enumber, 16)),'~'));
+% disp(char(app.status(enumber, 16)));
+disp(double(app.status(enumber, 1)));
+disp(double(app.features(app.num_detected, 1)));
+while (~strcmp(char(app.status(enumber, 16)),'~')) % should start at 1 since the other app does that 
+    disp(enumber);
+    while  double(app.status(enumber, 1)) < double(app.features(app.num_detected, 1))
+        enumber = enumber+1;
+    end
+    while ~isequal(double(app.status(enumber, 1)),double(app.features(app.num_detected, 1)))
+        app.num_detected = app.num_detected + 1; 
+    end
+    
+    Cyan_BW_signals = double(app.features(app.num_detected, 18)) > app.Cyan_minSlider.Value;
+    
+
+    if max(Cyan_BW_signals, [], "all") == 1
+        Cyan_Detected = true;
+        Cyan_not_detected = false;
+    else
+        Cyan_not_detected = true;
+        Cyan_Detected = false;
+    end
+
+    %%%% Processing green image
+
+    max_Green_intensity = double(app.features(app.num_detected, 26)); % 24 is the meadian which might be more useful 
+
+    if max_Green_intensity < app.Green_maxSlider.Value && max_Green_intensity > app.Green_minSlider.Value
+        Green_Detected_live = true;
+        Green_not_detected = false;
+        Green_Detected_dead = false;
+    elseif max_Green_intensity > app.Green_maxSlider.Value
+        Green_Detected_live = false;
+        Green_not_detected = false;
+        Green_Detected_dead = true;
+    else
+        Green_Detected_live = false;
+        Green_not_detected = true;
+        Green_Detected_dead = false;
+    end
+
+             
+    if Cyan_Detected == 1 & Green_Detected_live == 1
+        app.for_Display(enumber, 6) = "C1";
+        app.status(enumber, 21) = "C1"; %live
+        app.status(enumber, 22) = "1A1";
+        app.status(enumber, 23) = 47;
+        app.status(enumber, 9:10) = 0;
+        app.status(enumber, 11) = 1;
+        app.image_properties(app.num_detected, 6) = 1;
+        app.features(app.num_detected, 12) = 1;
+    elseif  Cyan_not_detected == 1 | Green_not_detected == 1
+        
+        app.status(enumber, 21) = "C3"; % empty
+        app.for_Display(enumber, 6) = "C3";
+        app.status(enumber, 9) = 1;
+        app.status(enumber, 10:11) = 0;
+        if sum(strcmp(app.status(enumber, 16), expControls))>= 1
+            app.for_Display(enumber, 6) = "C1";
+            app.status(enumber, 21) = "C1"; %live
+            app.status(enumber, 22) = "1A1";
+            app.status(enumber, 23) = 47;
+            app.status(enumber, 9:10) = 0;
+            app.status(enumber, 11) = 1;
+        end
+    elseif Cyan_Detected == 1 & Green_Detected_dead == 1
+        app.status(enumber, 21) = "C2"; %dead
+        app.status(enumber, 22) = "1A1";
+        app.status(enumber, 23) = 47;
+        app.for_Display(enumber, 6) = "C2";
+        app.status(enumber, 9, 11) = 0;
+        app.status(enumber, 10) = 1;
+        app.image_properties(app.num_detected, 6) = -1;
+        app.features(app.num_detected, 12) = -1;
+    end      
+        enumber = enumber + 1; 
+        % pause(.05) % Pause between each image analysis takes roughly 5160 X 
+
+end
+% app.cellStatus = cellStatusArray; % saving it so it can be accessed elsewhere 
+app.UITable.Data = app.for_Display;
+
+app.TileviewButton.Visible = "on";
+app.SaveButton.Visible = "on";
+app.UpdateThreshholdsButton.Visible = 'on';
