@@ -21,7 +21,7 @@ function [cNumber] = getCNumber(cyan,cyan_mask,green,green_mask,multi)
     
 
     % compare avg cell intensity cyan vs green
-    if  multi == false && (max(cyan_signal(:)) > 0 ||  max(green_signal(:)) > 0)
+    if  multi == false && (max(cyan_signal(:)) > 0 &&  max(green_signal(:)) > 0)
        if prctile(cyan_signal(:),95) > prctile(green_signal(:),95)
             cNumber = "C1";
        else
